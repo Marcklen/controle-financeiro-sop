@@ -7,4 +7,5 @@ import br.com.sop.controlefinanceiro.domain.Despesa;
 public interface DespesaService {
 
 	List<Despesa> findAll();
+	Despesa create(Despesa despesa);
 }

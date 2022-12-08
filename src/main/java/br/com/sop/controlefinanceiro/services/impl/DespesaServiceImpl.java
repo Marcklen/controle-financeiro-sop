@@ -20,4 +20,11 @@ public class DespesaServiceImpl implements DespesaService{
 		var despesa = despesaRepository.findAll();
 		return despesa;
 	}
+
+	@Override
+	public Despesa create(Despesa despesa) {
+		return despesaRepository.save(despesa);
+	}
+	
+	
 }
