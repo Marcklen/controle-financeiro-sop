@@ -19,6 +19,7 @@ import br.com.sop.controlefinanceiro.domain.Empenho;
 import br.com.sop.controlefinanceiro.domain.Pagamento;
 import br.com.sop.controlefinanceiro.domain.dtos.DespesaDTO;
 import br.com.sop.controlefinanceiro.domain.dtos.EmpenhoCreateDTO;
+import br.com.sop.controlefinanceiro.domain.dtos.EmpenhoDTO;
 import br.com.sop.controlefinanceiro.domain.dtos.PagamentoDTO;
 import br.com.sop.controlefinanceiro.services.DespesaService;
 import br.com.sop.controlefinanceiro.services.EmpenhoService;
@@ -87,6 +88,18 @@ public class DespesaController {
 		}
 	}
 
+	// buscar todos os empenhos
+	@GetMapping("{despesaId}/empenhos")
+	public ResponseEntity<?> getAllEmp() {
+		try {
+			var empenhoList = empenhoService.getAll();
+			var result = empenhoList.stream().map(empenho -> modelMapper.map(empenho, EmpenhoDTO.class)).toList();
+			return ResponseEntity.ok(result);
+		} catch (RuntimeException e) {
+			return ResponseEntity.internalServerError().build();
+		}
+	}
+
 	@GetMapping("{despesaId}/empenhos/{empenhoId}")
 	public ResponseEntity<?> getEmpenhoInDespesa(@PathVariable Integer empenhoId) {
 		try {
@@ -132,6 +145,18 @@ public class DespesaController {
 					.buildAndExpand(pagamento.getPagamentoId()).toUri();
 
 			return ResponseEntity.created(uri).body(pagamento);
+		} catch (RuntimeException e) {
+			return ResponseEntity.internalServerError().build();
+		}
+	}
+
+	// buscar todos os pagamentos
+	@GetMapping("{despesaId}/empenhos/{empenhoId}/pagamentos")
+	public ResponseEntity<?> getAllPgto() {
+		try {
+			var pagamentoList = pagamentoService.getAll();
+			var result = pagamentoList.stream().map(pagamento -> modelMapper.map(pagamento, PagamentoDTO.class)).toList();
+			return ResponseEntity.ok(result);
 		} catch (RuntimeException e) {
 			return ResponseEntity.internalServerError().build();
 		}
