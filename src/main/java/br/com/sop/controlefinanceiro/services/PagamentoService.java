@@ -1,11 +1,12 @@
 package br.com.sop.controlefinanceiro.services;
 
-import java.util.List;
+import org.springframework.stereotype.Service;
 
 import br.com.sop.controlefinanceiro.domain.Pagamento;
+import br.com.sop.controlefinanceiro.repositories.PagamentoRepository;
+import br.com.sop.controlefinanceiro.services.impl.ServiceMaster;
 
-public interface PagamentoService {
+@Service
+public class PagamentoService extends ServiceMaster<Pagamento, PagamentoRepository> {
 
-	List<Pagamento> findAll();
-	Pagamento create (Pagamento pagamento);
 }

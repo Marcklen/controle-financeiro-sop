@@ -1,11 +1,12 @@
 package br.com.sop.controlefinanceiro.services;
 
-import java.util.List;
+import org.springframework.stereotype.Service;
 
 import br.com.sop.controlefinanceiro.domain.Despesa;
+import br.com.sop.controlefinanceiro.repositories.DespesaRepository;
+import br.com.sop.controlefinanceiro.services.impl.ServiceMaster;
 
-public interface DespesaService {
+@Service
+public class DespesaService extends ServiceMaster<Despesa, DespesaRepository> {
 
-	List<Despesa> findAll();
-	Despesa create(Despesa despesa);
 }

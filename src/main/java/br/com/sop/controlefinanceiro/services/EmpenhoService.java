@@ -2,10 +2,17 @@ package br.com.sop.controlefinanceiro.services;
 
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import br.com.sop.controlefinanceiro.domain.Empenho;
+import br.com.sop.controlefinanceiro.repositories.EmpenhoRepository;
+import br.com.sop.controlefinanceiro.services.impl.ServiceMaster;
 
-public interface EmpenhoService {
+@Service
+public class EmpenhoService extends ServiceMaster<Empenho, EmpenhoRepository> {
 
-	List<Empenho> findAll();
-	Empenho create(Empenho empenho);
+    public List<Empenho> teste() {
+        var repository = super.getRepository();
+        return repository.findAll();
+    }
 }
