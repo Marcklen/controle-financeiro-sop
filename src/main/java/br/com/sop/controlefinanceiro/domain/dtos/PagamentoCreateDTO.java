@@ -3,21 +3,16 @@ package br.com.sop.controlefinanceiro.domain.dtos;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-import br.com.sop.controlefinanceiro.domain.Empenho;
-
-//import com.fasterxml.jackson.annotation.JsonInclude;
-
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-//@JsonInclude(JsonInclude.Include.NON_NULL)
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
-public class PagamentoDTO {
-
-	private Integer pagamentoId;
+public class PagamentoCreateDTO {
 
 	private String numeroPagamento;
 
@@ -28,7 +23,4 @@ public class PagamentoDTO {
 	private BigDecimal valorPagamento;
 
 	private String observacao;
-	
-	private Empenho empenho;
-
 }

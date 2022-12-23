@@ -20,6 +20,7 @@ import br.com.sop.controlefinanceiro.domain.Pagamento;
 import br.com.sop.controlefinanceiro.domain.dtos.DespesaDTO;
 import br.com.sop.controlefinanceiro.domain.dtos.EmpenhoCreateDTO;
 import br.com.sop.controlefinanceiro.domain.dtos.EmpenhoDTO;
+import br.com.sop.controlefinanceiro.domain.dtos.PagamentoCreateDTO;
 import br.com.sop.controlefinanceiro.domain.dtos.PagamentoDTO;
 import br.com.sop.controlefinanceiro.services.DespesaService;
 import br.com.sop.controlefinanceiro.services.EmpenhoService;
@@ -42,7 +43,7 @@ public class DespesaController {
 	private ModelMapper modelMapper;
 
 	@GetMapping
-	public ResponseEntity<?> getAll() {
+	public ResponseEntity<?> getAllDesp() {
 		try {
 			var despesaList = despesaService.getAll();
 			var result = despesaList.stream().map(despesa -> modelMapper.map(despesa, DespesaDTO.class)).toList();
@@ -88,7 +89,7 @@ public class DespesaController {
 		}
 	}
 
-	// buscar todos os empenhos
+	// buscar todos os empenhos ref. a despesa
 	@GetMapping("{despesaId}/empenhos")
 	public ResponseEntity<?> getAllEmp() {
 		try {
@@ -128,29 +129,32 @@ public class DespesaController {
 	}
 
 	@PostMapping("{despesaId}/empenhos/{empenhoId}/pagamentos")
-	public ResponseEntity<?> createPagamentoInEmpenho(@PathVariable Integer despesaId, @PathVariable Integer empenhoId,
-			@RequestBody PagamentoDTO pagamentoToCreate) {
-		try {
-			var optEmpenho = empenhoService.getById(empenhoId);
-			if (!optEmpenho.isPresent())
-				return ResponseEntity.badRequest().body("Empenho inválido");
+    public ResponseEntity<?> createPagamentoInEmpenho(
+        @PathVariable Integer despesaId,
+        @PathVariable Integer empenhoId,
+        @RequestBody PagamentoCreateDTO pagamentoToCreate)
+    {
+        try{
+            var optEmpenho = empenhoService.getById(empenhoId);
+            if (!optEmpenho.isPresent())
+                return ResponseEntity.badRequest().body("Empenho inválido");
 
-			if (optEmpenho.get().getDespesa().getDespesaId() != despesaId)
-				return ResponseEntity.badRequest().body("Despesa inválida");
+            if (optEmpenho.get().getDespesa().getDespesaId() != despesaId)
+                return ResponseEntity.badRequest().body("Despesa inválida");
 
-			var pagamento = modelMapper.map(pagamentoToCreate, Pagamento.class);
-			pagamento = pagamentoService.create(pagamento);
+            var pagamento = modelMapper.map(pagamentoToCreate, Pagamento.class);
+            pagamento = pagamentoService.create(pagamento);
 
-			URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}")
-					.buildAndExpand(pagamento.getPagamentoId()).toUri();
+            URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}")
+                    .buildAndExpand(pagamento.getPagamentoId()).toUri();
 
-			return ResponseEntity.created(uri).body(pagamento);
-		} catch (RuntimeException e) {
-			return ResponseEntity.internalServerError().build();
-		}
-	}
+            return ResponseEntity.created(uri).body(pagamento);
+        }catch (RuntimeException e){
+            return ResponseEntity.internalServerError().build();
+        }
+    }
 
-	// buscar todos os pagamentos
+	// buscar todos os pagamentos ref a empenhos
 	@GetMapping("{despesaId}/empenhos/{empenhoId}/pagamentos")
 	public ResponseEntity<?> getAllPgto() {
 		try {
