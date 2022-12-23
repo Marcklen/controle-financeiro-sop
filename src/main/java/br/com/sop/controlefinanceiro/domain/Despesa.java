@@ -24,7 +24,7 @@ import lombok.NoArgsConstructor;
 //DESPESA 
 //-> Que agrega informações referente aos processos financeiros da instituição.
 
-@Entity
+@Entity(name = "tb_despesas")
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
@@ -33,21 +33,36 @@ public class Despesa implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer numeroProtocolo;
-	private String tipoDespesa;
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private LocalDate dataProtocolo = LocalDate.now();
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private LocalDate dataVencimento;
-	private String credorDespesa;
-	private String descricaoDespesa;
-	@Column(precision = 20, scale = 2)
-	private BigDecimal valorDespesa;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer despesaId;
 
-	@Enumerated(EnumType.STRING)
-	private Status status;
-	
-	@OneToMany(mappedBy = "despesa")
-	private Set<Empenho> empenho;
+    @Column(name="numero_protocolo", nullable = false, unique = true)
+    private String numeroProtocolo;
+
+    @Column(name="tipo_despesa")
+    private String tipoDespesa;
+
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    @Column(name="data_protocolo")
+    private LocalDate dataProtocolo = LocalDate.now();
+
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private LocalDate dataVencimento;
+
+    @Column(name="credor_despesa", nullable = false)
+    private String credorDespesa;
+
+    @Column(name="descricao_despesa", nullable = false)
+    private String descricaoDespesa;
+
+    @Column(name="valor_despesa", precision = 20, scale = 2)
+    private BigDecimal valorDespesa;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name="status")
+    private Status status;
+
+    // TODO: Pode ser nulo, verificar
+    @OneToMany(mappedBy = "despesa")
+    private Set<Empenho> empenhos;
 }

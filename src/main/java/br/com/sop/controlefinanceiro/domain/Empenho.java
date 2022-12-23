@@ -16,12 +16,13 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
+@Entity(name = "tb_empenhos")
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
@@ -31,19 +32,29 @@ public class Empenho implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer numeroEmpenho;
-	@Column(unique = true)
+	private Integer empenhoId;
+
+	@Column(name = "numero_empenho", unique = true, nullable = false)
+	private String numeroEmpenho;
+
+	@Column(name = "ano_empenho")
 	private Integer anoEmpenho;
+
 	@JsonFormat(pattern = "dd/MM/yyyy")
+	@Column(name = "data_empenho")
 	private LocalDate dataEmpenho = LocalDate.now();
-	@Column(precision = 20, scale = 2)
+
+	@Column(name = "valor_empenho", precision = 20, scale = 2)
 	private BigDecimal valorEmpenho;
+
 	private String observacao;
 
+	@JsonIgnore
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "despesa_id", referencedColumnName = "numeroProtocolo", nullable = false)
+	@JoinColumn(name = "despesa_id", referencedColumnName = "despesaId", nullable = false)
 	private Despesa despesa;
 
+	// TODO: Pode ser nulo, verificar
 	@OneToMany(mappedBy = "empenho")
-	private Set<Pagamento> pagamento;
+	private Set<Pagamento> pagamentos;
 }
