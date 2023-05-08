@@ -1,13 +1,15 @@
 package br.com.sop.entities;
 
 import br.com.sop.entities.enums.StatusDespesa;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.Set;
 
 @Entity(name = "DESPESA")
+@Getter
+@Setter
 public class DespesaEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "DESPESA_SEQ")
