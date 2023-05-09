@@ -5,19 +5,13 @@ import lombok.Data;
 
 import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
 @Data
 public class DespesaCreateDTO {
 
-    @Size(min = 1, max = 9999)
     @Schema(description = "Número do Protocolo", example = "2023")
     private Integer numero_protocolo;
-
-//    @NotNull
-//    @Schema(description = "Tipo da Despesa", example = "AGUARDANDO_EMPENHO", enumAsRef = true)
-//    private StatusDespesa tipo_despesa;
 
     @NotNull
     @FutureOrPresent(message = "O campo data protocolo deve ser atual ou futuro!")
@@ -35,8 +29,6 @@ public class DespesaCreateDTO {
     @Schema(description = "Descrição da Despesa", example = "Pagamento de Serviços de Terceiros - Pessoa Jurídica")
     private String descricao_despesa;
 
-
     @Schema(description = "Valor da Despesa", example = "1000.00")
     private Double valor_despesa;
-
 }

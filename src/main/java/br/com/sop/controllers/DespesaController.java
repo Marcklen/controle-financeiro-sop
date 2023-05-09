@@ -12,11 +12,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @RequiredArgsConstructor
-@Tag(name = "DESPESA", description = "Responsável pelo gerenciamento das Despesas")
 @RequestMapping("/api/v1/despesas")
 @Slf4j
 public class DespesaController implements IDespesaDoc {
@@ -27,5 +29,10 @@ public class DespesaController implements IDespesaDoc {
     public ResponseEntity<DespesaDTO> adicionarDespesa(DespesaCreateDTO despesaCreateDTO)
             throws RegraDeNegocioException {
         return new ResponseEntity<>(despesaService.criarDespesa(despesaCreateDTO), CREATED);
+    }
+
+    @Override
+    public ResponseEntity<List<DespesaDTO>> listarDespesas() {
+        return new ResponseEntity<>(despesaService.listarDespesas(), OK);
     }
 }

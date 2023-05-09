@@ -1,11 +1,13 @@
 package br.com.sop.entities;
 
 import br.com.sop.entities.enums.StatusDespesa;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Set;
 
 @Entity(name = "DESPESA")
 @Getter
@@ -39,7 +41,7 @@ public class DespesaEntity {
     private Double valor_despesa;
 
     // pode ter nenhum ou muitos empenhos
-//    @JsonIgnore
-//    @OneToMany(mappedBy = "despesa", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//    private Set<EmpenhoEntity> empenhos;
+    @JsonIgnore
+    @OneToMany(mappedBy = "despesa", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<EmpenhoEntity> empenhos;
 }
