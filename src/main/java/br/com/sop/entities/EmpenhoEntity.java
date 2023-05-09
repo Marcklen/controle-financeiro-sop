@@ -40,8 +40,11 @@ public class EmpenhoEntity {
     @Column(name = "OBSERVACAO_EMPENHO")
     private String observacao_empenho;
 
+    @Column(name = "ID_DESPESA")
+    private Integer id_despesa;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ID_DESPESA", referencedColumnName = "ID_DESPESA")
+    @JoinColumn(name = "ID_DESPESA", referencedColumnName = "ID_DESPESA", insertable = false, updatable = false)
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private DespesaEntity despesa;
 

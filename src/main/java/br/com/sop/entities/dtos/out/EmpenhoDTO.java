@@ -9,4 +9,7 @@ public class EmpenhoDTO extends EmpenhoCreateDTO {
 
     @Schema(description = "Id do empenho", example = "1")
     private Integer id_empenho;
+
+    @Schema(description = "Id da despesa vinculada ao empenho", example = "1")
+    private Integer id_despesa;
 }

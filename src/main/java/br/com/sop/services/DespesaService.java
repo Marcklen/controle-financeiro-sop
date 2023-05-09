@@ -12,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -39,11 +38,9 @@ public class DespesaService {
         return despesaRepository.findAll()
                 .stream()
                 .map(despesa -> objectMapper.convertValue(despesa, DespesaDTO.class))
-                .collect(Collectors.toList());
+                .toList();
     }
 
-    // Esse método será utilizado futuramente para alterar e/ou excluir uma despesa e também para achar uma
-    // despesa em demais classes por meio do id
     public DespesaEntity buscarDespesaPorId(Integer idDespesa) throws RegraDeNegocioException {
         return despesaRepository.findById(idDespesa)
                 .orElseThrow(() -> new RegraDeNegocioException("Despesa não encontrada"));

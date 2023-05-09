@@ -1,11 +1,16 @@
 package br.com.sop.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity(name = "PAGAMENTO")
+@Getter
+@Setter
 public class PagamentoEntity {
     /**
      * - Ano do Pagamento
@@ -34,8 +39,12 @@ public class PagamentoEntity {
     @Column(name = "OBSERVACAO_PAGAMENTO")
     private String observacao_pagamento;
 
+    @Column(name = "ID_EMPENHO")
+    private Integer id_empenho;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ID_EMPENHO", referencedColumnName = "ID_EMPENHO")
-    @JsonIgnore
+    @JoinColumn(name = "ID_EMPENHO", referencedColumnName = "ID_EMPENHO", insertable = false, updatable = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @JsonSerialize(as = EmpenhoEntity.class)
     private EmpenhoEntity empenho;
 }

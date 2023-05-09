@@ -28,7 +28,6 @@ public class EmpenhoService {
             DespesaEntity despesaEntity = despesaService.buscarDespesaPorId(idDespesa);
             EmpenhoEntity empenhoEntity = objectMapper.convertValue(empenhoCreateDTO, EmpenhoEntity.class);
             // SETAR O ID DA DESPESA
-            empenhoEntity.getDespesa().setId_despesa(idDespesa);
             empenhoEntity.setDespesa(despesaEntity);
             EmpenhoEntity empenhoEntityCriado = empenhoRepository.save(empenhoEntity);
             return objectMapper.convertValue(empenhoEntityCriado, EmpenhoDTO.class);
@@ -42,6 +41,11 @@ public class EmpenhoService {
         return empenhoRepository.findAll()
                 .stream()
                 .map(empenho -> objectMapper.convertValue(empenho, EmpenhoDTO.class))
-                .collect(Collectors.toList());
+                .toList();
+    }
+
+    public EmpenhoEntity buscarEmpenhoPorId(Integer idEmpenho) throws RegraDeNegocioException {
+        return empenhoRepository.findById(idEmpenho)
+                .orElseThrow(() -> new RegraDeNegocioException("Empenho não encontrado"));
     }
 }
