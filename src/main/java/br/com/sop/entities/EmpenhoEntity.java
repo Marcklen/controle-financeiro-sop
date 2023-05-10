@@ -29,7 +29,7 @@ public class EmpenhoEntity {
     @Column(name = "ANO_EMPENHO")
     private Integer ano_empenho;
 
-    @Column(name = "NUMERO_EMPENHO")
+    @Column(name = "NUMERO_EMPENHO", unique = true)
     private Integer numero_empenho;
 
     @Column(name = "DATA_EMPENHO")

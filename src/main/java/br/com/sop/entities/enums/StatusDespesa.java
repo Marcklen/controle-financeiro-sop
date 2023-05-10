@@ -15,7 +15,6 @@ public enum StatusDespesa {
     PARCIALMENTE_PAGA(4),
     // — > Despesa onde a soma dos valores pagos é inferior ao valor da despesa
     PAGA(5);
-
     // — > Despesa onde a soma dos valores pagos ao valor da despesa
 
     private Integer status;

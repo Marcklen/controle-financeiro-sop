@@ -8,6 +8,7 @@ import br.com.sop.services.PagamentoService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,6 +21,7 @@ import static org.springframework.http.HttpStatus.OK;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/pagamentos")
 @RestController
+@Validated
 public class PagamentoController implements IPagamentoDoc {
 
     private final PagamentoService pagamentoService;

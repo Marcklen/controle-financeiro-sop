@@ -1,9 +1,11 @@
 package br.com.sop.services;
 
+import br.com.sop.entities.DespesaEntity;
 import br.com.sop.entities.EmpenhoEntity;
 import br.com.sop.entities.PagamentoEntity;
 import br.com.sop.entities.dtos.in.PagamentoCreateDTO;
 import br.com.sop.entities.dtos.out.PagamentoDTO;
+import br.com.sop.entities.enums.StatusDespesa;
 import br.com.sop.exceptions.RegraDeNegocioException;
 import br.com.sop.repositories.PagamentoRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,6 +35,8 @@ public class PagamentoService {
         pagamentoEntity.setEmpenho(empenhoEntity);
         // SETAR O PAGAMENTO NO EMPENHO
         pagamentoEntity.getEmpenho().getPagamentos().add(pagamentoEntity);
+        // VERIFICAÇÕES COM O VALOR DO PAGAMENTO SE É VÁLIDO PARA O EMPENHO
+        verificarValorDoPagamento(idEmpenho, pagamentoEntity.getValor_pagamento());
         // SALVAR O PAGAMENTO
         PagamentoEntity pagamentoEntityCriado = pagamentoRepository.save(pagamentoEntity);
         return objectMapper.convertValue(pagamentoEntityCriado, PagamentoDTO.class);
@@ -48,5 +52,29 @@ public class PagamentoService {
     public PagamentoEntity buscarPagamentoPorId(Integer idPagamento) throws RegraDeNegocioException {
         return pagamentoRepository.findById(idPagamento)
                 .orElseThrow(() -> new RegraDeNegocioException("Pagamento não encontrado"));
+    }
+
+    // MÉTODO PARA VERIFICAR SE O VALOR DO PAGAMENTO É VÁLIDO PARA O EMPENHO
+    private boolean verificarValorDoPagamento(Integer idEmpenho, Double valorPagamento) throws RegraDeNegocioException {
+        EmpenhoEntity empenhoEntity = empenhoService.buscarEmpenhoPorId(idEmpenho);
+        if (empenhoEntity == null) {
+            throw new RegraDeNegocioException("Empenho não encontrado para o id informado.");
+        }
+        DespesaEntity despesaEntity = empenhoEntity.getDespesa();
+        Double valorDoEmpenho = empenhoEntity.getValor_empenho();
+        valorPagamento = empenhoEntity
+                .getPagamentos()
+                .stream()
+                .mapToDouble(PagamentoEntity::getValor_pagamento).sum();
+        Double valorRestante = valorDoEmpenho - valorPagamento;
+        // modificar o status dos empenhos
+        if (valorPagamento.equals(0d) || valorPagamento > 0 && valorPagamento < valorDoEmpenho) {
+            despesaEntity.setTipo_despesa(StatusDespesa.PARCIALMENTE_PAGA);
+        } else if (valorPagamento.equals(valorDoEmpenho)) {
+            despesaEntity.setTipo_despesa(StatusDespesa.PAGA);
+        } else if (valorPagamento > valorDoEmpenho) {
+            throw new RegraDeNegocioException("O Valor do pagamento não pode ser maior que o valor do empenho.");
+        }
+        return valorRestante >= valorPagamento;
     }
 }
