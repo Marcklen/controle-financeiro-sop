@@ -12,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -24,17 +23,19 @@ public class EmpenhoService {
     private final DespesaService despesaService;
 
     public EmpenhoDTO criarEmpenho(Integer idDespesa, EmpenhoCreateDTO empenhoCreateDTO) throws RegraDeNegocioException {
-        try {
-            DespesaEntity despesaEntity = despesaService.buscarDespesaPorId(idDespesa);
-            EmpenhoEntity empenhoEntity = objectMapper.convertValue(empenhoCreateDTO, EmpenhoEntity.class);
-            // SETAR O ID DA DESPESA
-            empenhoEntity.setDespesa(despesaEntity);
-            EmpenhoEntity empenhoEntityCriado = empenhoRepository.save(empenhoEntity);
-            return objectMapper.convertValue(empenhoEntityCriado, EmpenhoDTO.class);
-        } catch (Exception e) {
-            log.error("Erro ao criar empenho", e);
-            throw new RegraDeNegocioException("Erro ao criar empenho");
+        DespesaEntity despesaEntity = despesaService.buscarDespesaPorId(idDespesa);
+        if (despesaEntity == null) {
+            throw new RegraDeNegocioException("Despesa não encontrada para o id informado.");
         }
+        EmpenhoEntity empenhoEntity = objectMapper.convertValue(empenhoCreateDTO, EmpenhoEntity.class);
+        // SETAR O ID DA DESPESA
+        empenhoEntity.setId_despesa(idDespesa);
+        empenhoEntity.setDespesa(despesaEntity);
+        // SETAR O EMPENHO NA DESPESA
+        empenhoEntity.getDespesa().getEmpenhos().add(empenhoEntity);
+        // SALVAR O EMPENHO
+        EmpenhoEntity empenhoEntityCriado = empenhoRepository.save(empenhoEntity);
+        return objectMapper.convertValue(empenhoEntityCriado, EmpenhoDTO.class);
     }
 
     public List<EmpenhoDTO> listarEmpenhos() {

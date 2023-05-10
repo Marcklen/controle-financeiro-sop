@@ -23,20 +23,19 @@ public class PagamentoService {
     private final EmpenhoService empenhoService;
 
     public PagamentoDTO criarPagamento(Integer idEmpenho, PagamentoCreateDTO pagamentoCreateDTO) throws RegraDeNegocioException {
-        try {
-            EmpenhoEntity empenhoEntity = empenhoService.buscarEmpenhoPorId(idEmpenho);
-            if (empenhoEntity == null) {
-                throw new RegraDeNegocioException("Empenho não encontrado para o id informado.");
-            }
-            PagamentoEntity pagamentoEntity = objectMapper.convertValue(pagamentoCreateDTO, PagamentoEntity.class);
-            // SETANDO O ID DO EMPENHO
-            pagamentoEntity.setEmpenho(empenhoEntity);
-            PagamentoEntity pagamentoEntityCriado = pagamentoRepository.save(pagamentoEntity);
-            return objectMapper.convertValue(pagamentoEntityCriado, PagamentoDTO.class);
-        } catch (Exception e) {
-            log.error("Erro ao criar pagamento", e);
-            throw new RegraDeNegocioException("Erro ao criar pagamento");
+        EmpenhoEntity empenhoEntity = empenhoService.buscarEmpenhoPorId(idEmpenho);
+        if (empenhoEntity == null) {
+            throw new RegraDeNegocioException("Empenho não encontrado para o id informado.");
         }
+        PagamentoEntity pagamentoEntity = objectMapper.convertValue(pagamentoCreateDTO, PagamentoEntity.class);
+        // SETANDO O ID DO EMPENHO
+        pagamentoEntity.setId_empenho(idEmpenho);
+        pagamentoEntity.setEmpenho(empenhoEntity);
+        // SETAR O PAGAMENTO NO EMPENHO
+        pagamentoEntity.getEmpenho().getPagamentos().add(pagamentoEntity);
+        // SALVAR O PAGAMENTO
+        PagamentoEntity pagamentoEntityCriado = pagamentoRepository.save(pagamentoEntity);
+        return objectMapper.convertValue(pagamentoEntityCriado, PagamentoDTO.class);
     }
 
     public List<PagamentoDTO> listarPagamentos() {

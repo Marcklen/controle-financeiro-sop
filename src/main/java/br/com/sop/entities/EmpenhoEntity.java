@@ -2,6 +2,7 @@ package br.com.sop.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -46,6 +47,7 @@ public class EmpenhoEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_DESPESA", referencedColumnName = "ID_DESPESA", insertable = false, updatable = false)
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+//    @JsonSerialize(as = DespesaEntity.class)
     private DespesaEntity despesa;
 
     @OneToMany(mappedBy = "empenho", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
