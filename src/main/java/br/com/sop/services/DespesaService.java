@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -36,6 +37,30 @@ public class DespesaService {
 
     public List<DespesaDTO> listarDespesas() {
         return despesaRepository.findAll()
+                .stream()
+                .map(despesa -> objectMapper.convertValue(despesa, DespesaDTO.class))
+                .toList();
+    }
+
+    public List<DespesaDTO> listarDespesasPorDataProtocolo(LocalDate dataInicio, LocalDate dataFim) {
+        return despesaRepository
+                .findByData_protocoloBetween(dataInicio, dataFim)
+                .stream()
+                .map(despesa -> objectMapper.convertValue(despesa, DespesaDTO.class))
+                .toList();
+    }
+
+    public List<DespesaDTO> listarDespesaPorStatus(StatusDespesa statusDespesa) {
+        return despesaRepository
+                .findByTipo_despesaExists(statusDespesa)
+                .stream()
+                .map(despesa -> objectMapper.convertValue(despesa, DespesaDTO.class))
+                .toList();
+    }
+
+    public List<DespesaDTO> listarDespesaPorCredor(String credor) {
+        return despesaRepository
+                .findDistinctByCredor_despesaContainingIgnoreCase(credor)
                 .stream()
                 .map(despesa -> objectMapper.convertValue(despesa, DespesaDTO.class))
                 .toList();
