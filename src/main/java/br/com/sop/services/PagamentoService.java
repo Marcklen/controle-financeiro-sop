@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Slf4j
@@ -44,6 +45,14 @@ public class PagamentoService {
 
     public List<PagamentoDTO> listarPagamentos() {
         return pagamentoRepository.findAll()
+                .stream()
+                .map(pagamento -> objectMapper.convertValue(pagamento, PagamentoDTO.class))
+                .toList();
+    }
+
+    public List<PagamentoDTO> listarPagamentoComFiltroDataInicioEDataFim(LocalDate dataInicio, LocalDate dataFim) {
+        return pagamentoRepository
+                .findByData_pagamentoBetween(dataInicio, dataFim)
                 .stream()
                 .map(pagamento -> objectMapper.convertValue(pagamento, PagamentoDTO.class))
                 .toList();

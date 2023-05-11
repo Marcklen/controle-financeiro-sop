@@ -12,6 +12,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.CREATED;
@@ -34,5 +35,10 @@ public class PagamentoController implements IPagamentoDoc {
     @Override
     public ResponseEntity<List<PagamentoDTO>> listarPagamentos() {
         return new ResponseEntity<>(pagamentoService.listarPagamentos(), OK);
+    }
+
+    @Override
+    public ResponseEntity<List<PagamentoDTO>> listarPagamentoComFiltroDeDatas(LocalDate dataInicio, LocalDate dataFim) {
+        return new ResponseEntity<>(pagamentoService.listarPagamentoComFiltroDataInicioEDataFim(dataInicio, dataFim), OK);
     }
 }

@@ -4,14 +4,19 @@ import br.com.sop.entities.DespesaEntity;
 import br.com.sop.entities.EmpenhoEntity;
 import br.com.sop.entities.dtos.in.EmpenhoCreateDTO;
 import br.com.sop.entities.dtos.out.EmpenhoDTO;
+import br.com.sop.entities.dtos.out.PageDTO;
 import br.com.sop.entities.enums.StatusDespesa;
 import br.com.sop.exceptions.RegraDeNegocioException;
 import br.com.sop.repositories.EmpenhoRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Slf4j
@@ -46,6 +51,30 @@ public class EmpenhoService {
                 .stream()
                 .map(empenho -> objectMapper.convertValue(empenho, EmpenhoDTO.class))
                 .toList();
+    }
+
+    public PageDTO<EmpenhoDTO> listaPaginadaFiltradaPorDataInicioEDataFim(Integer pagina,
+                                                                          Integer tamanho,
+                                                                          LocalDate dataInicio,
+                                                                          LocalDate dataFim) {
+        Pageable solicitaoPagina = PageRequest.of(pagina, tamanho);
+
+        Page<EmpenhoEntity> paginacaoPorDatas =
+                empenhoRepository.findByData_empenhoBetween(solicitaoPagina, dataInicio, dataFim);
+
+        List<EmpenhoDTO> empenhoDTOList = paginacaoPorDatas
+                .getContent()
+                .stream()
+                .map(empenho -> objectMapper.convertValue(empenho, EmpenhoDTO.class))
+                .toList();
+
+        return new PageDTO<>(
+                paginacaoPorDatas.getTotalElements(),
+                paginacaoPorDatas.getTotalPages(),
+                pagina,
+                tamanho,
+                empenhoDTOList
+        );
     }
 
     public EmpenhoEntity buscarEmpenhoPorId(Integer idEmpenho) throws RegraDeNegocioException {
