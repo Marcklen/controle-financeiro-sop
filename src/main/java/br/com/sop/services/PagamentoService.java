@@ -58,6 +58,16 @@ public class PagamentoService {
                 .toList();
     }
 
+    // método para excluir um pagamento que não tenha um empenho cadastrado
+    public void excluirPagamento(Integer idPagamento) throws RegraDeNegocioException {
+        PagamentoEntity pagamentoEntity = buscarPagamentoPorId(idPagamento);
+        if (pagamentoEntity.getEmpenho().getId_empenho() == null) {
+            pagamentoRepository.deleteById(idPagamento);
+        } else {
+            throw new RegraDeNegocioException("Não é possível excluir um pagamento que tenha um empenho cadastrado.");
+        }
+    }
+
     public PagamentoEntity buscarPagamentoPorId(Integer idPagamento) throws RegraDeNegocioException {
         return pagamentoRepository.findById(idPagamento)
                 .orElseThrow(() -> new RegraDeNegocioException("Pagamento não encontrado"));

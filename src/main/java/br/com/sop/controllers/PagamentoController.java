@@ -15,8 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.LocalDate;
 import java.util.List;
 
-import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -40,5 +39,12 @@ public class PagamentoController implements IPagamentoDoc {
     @Override
     public ResponseEntity<List<PagamentoDTO>> listarPagamentoComFiltroDeDatas(LocalDate dataInicio, LocalDate dataFim) {
         return new ResponseEntity<>(pagamentoService.listarPagamentoComFiltroDataInicioEDataFim(dataInicio, dataFim), OK);
+    }
+
+    @Override
+    public ResponseEntity<Void> excluirPagamento(Integer id) throws RegraDeNegocioException {
+        pagamentoService.excluirPagamento(id);
+        log.info("Pagamento excluído com sucesso!");
+        return new ResponseEntity<>(NO_CONTENT);
     }
 }
