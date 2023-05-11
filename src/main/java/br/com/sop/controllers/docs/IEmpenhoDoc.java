@@ -11,10 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
@@ -52,4 +49,15 @@ public interface IEmpenhoDoc {
             @RequestParam(value = "tamanho", defaultValue = "10") Integer tamanho,
             @RequestParam("dataInicio") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicio,
             @RequestParam("dataFim") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFim);
+
+    @Operation(summary = "Exclui Empenho", description = "Exclui um Empenho")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "204", description = "Exclui um empenho"),
+                    @ApiResponse(responseCode = "403", description = "Você não tem permissão para acessar este recurso"),
+                    @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
+            }
+    )
+    @DeleteMapping("/{id}")
+    ResponseEntity<Void> excluirEmpenho(@PathVariable Integer id) throws RegraDeNegocioException;
 }

@@ -16,8 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.LocalDate;
 import java.util.List;
 
-import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.*;
 
 
 @Slf4j
@@ -42,5 +41,12 @@ public class EmpenhoController implements IEmpenhoDoc {
     @Override
     public ResponseEntity<PageDTO<EmpenhoDTO>> listarEmpenhosComPaginacaoEFiltroDeDatas(Integer pagina, Integer tamanho, LocalDate dataInicio, LocalDate dataFim) {
         return new ResponseEntity<>(empenhoService.listaPaginadaFiltradaPorDataInicioEDataFim(pagina, tamanho, dataInicio, dataFim), OK);
+    }
+
+    @Override
+    public ResponseEntity<Void> excluirEmpenho(Integer id) throws RegraDeNegocioException {
+        empenhoService.excluirEmpenho(id);
+        log.info("Empenho excluído com sucesso");
+        return new ResponseEntity<>(NO_CONTENT);
     }
 }

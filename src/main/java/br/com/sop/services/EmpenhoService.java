@@ -77,6 +77,15 @@ public class EmpenhoService {
         );
     }
 
+    public void excluirEmpenho(Integer idEmpenho) throws RegraDeNegocioException {
+        EmpenhoEntity empenhoEntity = buscarEmpenhoPorId(idEmpenho);
+        if (empenhoEntity.getDespesa().getId_despesa() == null) {
+            empenhoRepository.deleteById(idEmpenho);
+        } else {
+            throw new RegraDeNegocioException("Não é possível excluir um empenho que já possui uma despesa cadastrada.");
+        }
+    }
+
     public EmpenhoEntity buscarEmpenhoPorId(Integer idEmpenho) throws RegraDeNegocioException {
         return empenhoRepository.findById(idEmpenho)
                 .orElseThrow(() -> new RegraDeNegocioException("Empenho não encontrado"));
