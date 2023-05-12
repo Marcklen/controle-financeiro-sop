@@ -3,7 +3,6 @@ package br.com.sop.controllers.docs;
 import br.com.sop.entities.dtos.in.DespesaCreateDTO;
 import br.com.sop.entities.dtos.out.DespesaDTO;
 import br.com.sop.entities.enums.StatusDespesa;
-import br.com.sop.exceptions.RegraDeNegocioException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -32,7 +31,7 @@ public interface IDespesaDoc {
             }
     )
     @PostMapping
-    ResponseEntity<DespesaDTO> adicionarDespesa(@Valid @RequestBody DespesaCreateDTO despesaCreateDTO) throws RegraDeNegocioException;
+    ResponseEntity<DespesaDTO> adicionarDespesa(@Valid @RequestBody DespesaCreateDTO despesaCreateDTO);
 
     @Operation(summary = "Lista Despesa", description = "Lista de Despesas")
     @ApiResponses(

@@ -85,9 +85,11 @@ public class DespesaServiceTest {
         List<DespesaEntity> despesasMockadas = List.of(getDespesaEntityMock(), getDespesaEntityMock());
         //ACT
         when(despesaRepository.findAll()).thenReturn(despesasMockadas);
+        DespesaDTO despesaDTO = despesaService.listarDespesas().get(0);
         //ASSERT
         assertNotNull(despesasMockadas);
         assertEquals(2, despesasMockadas.size());
+        assertEquals(1, despesaDTO.getId_despesa());
     }
 
     @Test
@@ -98,11 +100,13 @@ public class DespesaServiceTest {
         List<DespesaEntity> despesasMockadas = List.of(getDespesaEntityMock(), getDespesaEntityMock());
         //ACT
         when(despesaRepository.findByData_protocoloBetween(any(), any())).thenReturn(despesasMockadas);
+        DespesaDTO despesaDTO = despesaService.listarDespesasPorDataProtocolo(dataProtocoloInicio, dataProtocoloFim).get(0);
         //ASSERT
         assertNotNull(despesasMockadas);
         assertEquals(2, despesasMockadas.size());
         assertEquals(dataProtocoloInicio, despesasMockadas.get(0).getData_protocolo());
         assertEquals(dataProtocoloFim, despesasMockadas.get(1).getData_protocolo());
+        assertEquals(despesaDTO.getId_despesa(), despesasMockadas.get(0).getId_despesa());
     }
 
     @Test
@@ -112,10 +116,12 @@ public class DespesaServiceTest {
         List<DespesaEntity> despesasMockadas = List.of(getDespesaEntityMock(), getDespesaEntityMock());
         //ACT
         when(despesaRepository.findByTipo_despesaExists(any())).thenReturn(despesasMockadas);
+        DespesaDTO despesaDTO = despesaService.listarDespesaPorStatus(statusDespesa).get(0);
         //ASSERT
         assertNotNull(despesasMockadas);
         assertEquals(2, despesasMockadas.size());
         assertEquals(statusDespesa, despesasMockadas.get(0).getTipo_despesa());
+        assertEquals(despesaDTO.getId_despesa(), despesasMockadas.get(0).getId_despesa());
     }
 
     @Test
@@ -125,10 +131,12 @@ public class DespesaServiceTest {
         List<DespesaEntity> despesasMockadas = List.of(getDespesaEntityMock(), getDespesaEntityMock());
         //ACT
         when(despesaRepository.findDistinctByCredor_despesaContainingIgnoreCase(any())).thenReturn(despesasMockadas);
+        DespesaDTO despesaDTO = despesaService.listarDespesaPorCredor(credor).get(0);
         //ASSERT
         assertNotNull(despesasMockadas);
         assertEquals(2, despesasMockadas.size());
         assertEquals(credor, despesasMockadas.get(0).getCredor_despesa());
+        assertEquals(despesaDTO.getCredor_despesa(), despesasMockadas.get(0).getCredor_despesa());
     }
 
     @Test
